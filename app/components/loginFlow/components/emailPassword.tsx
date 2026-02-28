@@ -28,6 +28,7 @@ const EmailPassword = ({
     setState
 }: Props) => {
 
+
     const [errors, setErrors] = useState({
         email: "",
         password: "",

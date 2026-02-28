@@ -12,6 +12,7 @@ import { useSelector } from "react-redux";
 import style from "../style.module.scss";
 
 const ProfileImageComponent = () => {
+	const [hasError, setHasError] = useState(false)
 	const [imageUrl, setImageUrl] = useState(DEFAULT_IMAGE)
 	const { update } = useSession();
 	const { data } = useSelector<RootState, ProfileStateType>(
@@ -68,8 +69,9 @@ const ProfileImageComponent = () => {
 
 	useEffect(() => {
 		if (!data?.imageUrl) return;
-		setImageUrl(data?.imageUrl ?? "")
-	}, [data?.imageUrl])
+		const defaultImage = hasError ? `assets/default_avatar.png` : data?.imageUrl
+		setImageUrl(defaultImage)
+	}, [data?.imageUrl, hasError])
 
 	return (
 		<div className={style.profileImage}>
@@ -82,6 +84,7 @@ const ProfileImageComponent = () => {
 				placeholder='blur'
 				loading='lazy'
 				blurDataURL={DEFAULT_IMAGE}
+				onHasError={setHasError}
 			/>
 
 			<label htmlFor="profile-image" onClick={handleClick}>

@@ -28,7 +28,7 @@ const SearchLayout = ({ children }: PropsWithChildren) => {
                 <p>Search File..</p>
             </button >
             <Modal centered={false} isOpen={state?.isOpen} id={SEARCH_MODAL} size="xl" className={style.searchModal} toggleHandler={toggleModal}>
-                {width > 700 && <ButtonClose className={style.modalClose} onClick={toggleModal} /> || null}
+                {width > 700 && <ButtonClose className={style.modalClose} onClick={() => toggleModal(false)} /> || null}
                 {children}
             </Modal>
         </div>

@@ -22,6 +22,7 @@ const ForgotPassword = ({
     setState
 }: Props) => {
 
+
     const mutation = useMutation({ mutationFn: forgotPasswordApi })
     const [errors, setErrors] = useState({
         email: "",

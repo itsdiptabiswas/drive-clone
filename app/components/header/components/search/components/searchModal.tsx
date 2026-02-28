@@ -4,6 +4,7 @@ import { fetchFileData, fetchFolderData } from '@/app/_actions/resource';
 import { FILTER_BUTTON_ID } from '@/app/_config/const';
 import useDebounceValue from '@/app/_hooks/useDebounce';
 import { ResourceDatasetType } from '@/app/components/body/components/resources/interfaces/index.interface';
+import useInputFocus from '@/app/hooks/useInputFocus';
 import { DATA_TYPE } from '@/app/lib/database/interfaces/files.interfaces';
 import { useQuery } from '@tanstack/react-query';
 import { Session } from 'next-auth';
@@ -48,6 +49,8 @@ const api = async (search: string, filters: string, userId: string) => {
 const SearchModal = ({ user }: Props) => {
     const { state, dispatch } = useContext(SearchContext);
     const debounceValue = useDebounceValue<string>(state?.search);
+    const { inputRef } = useInputFocus({ trigger: state?.isOpen })
+
 
     const enableSearch = useMemo(() => {
         return !!state?.isOpen && (!!debounceValue || !!Object.keys(state?.filters ?? {})?.length)
@@ -108,7 +111,7 @@ const SearchModal = ({ user }: Props) => {
 
     return <div className={style.wrapper}>
         <div className={style.inputGroup}>
-            <input type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />
+            <input ref={inputRef} type="text" placeholder='Search..' value={state?.search ?? ""} onChange={(e) => dispatch(handleSearch(e.target.value))} />
             <button id={FILTER_BUTTON_ID} className="button" onClick={() => dispatch(toggleFilterView())}>Filter</button>
         </div>
 

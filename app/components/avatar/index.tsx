@@ -1,6 +1,8 @@
+"use client"
+
 import { DEFAULT_IMAGE } from '@/app/_config'
 import { User } from 'next-auth'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Rings } from 'react-loader-spinner'
 import LocalImage from '../LocalImage'
 import style from "./style.module.scss"
@@ -16,6 +18,8 @@ type Props = {
 
 const AvatarComponent = ({ user: _user, width, height, className = "", isLoading = false, ...rest }: Props) => {
 
+    const [hasError, setHasError] = useState(false)
+
     const firstWord = useMemo(() => {
         return `${_user?.firstName?.charAt(0)}${_user?.lastName?.charAt(0)}`
     }, [_user])
@@ -26,13 +30,14 @@ const AvatarComponent = ({ user: _user, width, height, className = "", isLoading
             <div className={style.wrapper} style={{ width, height }}>
                 {
                     !isLoading ? <>
-                        {_user?.imageUrl && <LocalImage
+                        {_user?.imageUrl && !hasError && <LocalImage
                             src={_user?.imageUrl ?? ""}
                             alt='avatar-image'
                             fill
                             placeholder='blur'
                             loading='lazy'
                             blurDataURL={DEFAULT_IMAGE}
+                            onHasError={setHasError}
                         />}
 
                         <p>{firstWord?.[0] + firstWord[1]}</p></>
