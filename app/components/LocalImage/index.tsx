@@ -2,7 +2,7 @@
 
 import { useAppSelector } from '@/app/store';
 import Image, { ImageLoader } from 'next/image';
-import React, { useCallback } from 'react';
+import React, { Dispatch, SetStateAction, useCallback } from 'react';
 
 type Props = {
     style?: React.CSSProperties;
@@ -18,9 +18,10 @@ type Props = {
     loading?: "lazy" | "eager",
     blurDataURL?: string
     className?: string
+    onHasError?: Dispatch<SetStateAction<boolean>>
 }
 
-const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholder, loading, blurDataURL, className }: Props) => {
+const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholder, loading, blurDataURL, className, onHasError }: Props) => {
     const { type } = useAppSelector(state => state.network)
     const imageLoader: ImageLoader = useCallback(({ src, width }) => {
         const origin = window.location.origin
@@ -41,6 +42,7 @@ const LocalImage = ({ style, fill, alt, sizes, priority, onLoad, src, placeholde
             placeholder={placeholder}
             loading={loading}
             blurDataURL={blurDataURL}
+            onError={() => onHasError?.(true)}
         />
     )
 }
