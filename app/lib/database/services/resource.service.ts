@@ -6,7 +6,7 @@ import { CRYPTO } from "@/app/utils/crypto";
 import { formatBytes } from "@/app/utils/index.utils";
 import { LOCAL_S3 } from "@/app/utils/s3";
 import { GetObjectCommandOutput } from "@aws-sdk/client-s3";
-import { ReadStream, createReadStream } from "fs";
+import { ReadStream, createReadStream, existsSync } from "fs";
 import { appendFile, stat, unlink } from "fs/promises";
 import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
@@ -37,6 +37,8 @@ export class ResourceService {
         const tempFolder = tmpdir()
         console.log("System temp folder is - ", tempFolder)
         const filePath = path.resolve(`${tempFolder}/${name}`);
+
+        console.log("Path", { filePath, name })
         await appendFile(filePath, buffer)
         console.log("Local file appended")
 
@@ -52,8 +54,15 @@ export class ResourceService {
                 return readStream
             },
             delete: async function () {
-                await unlink(filePath)
-                console.log("LocalFile Deleted")
+                const hasFile = existsSync(filePath);
+
+                if (hasFile) {
+                    await unlink(filePath)
+                    console.log("LocalFile Deleted")
+                }
+                else {
+                    console.log("No file found to delete")
+                }
             },
             sizeInMB: sizeInMB,
             size: fileInfo.size

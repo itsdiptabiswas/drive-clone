@@ -1,5 +1,7 @@
 import { compare } from "bcryptjs"
 
+export const MAX_CHUNK_COUNT = 5
+
 const passwordTypes = [
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
     "abcdefghijklmnopqrstuvwxyz",

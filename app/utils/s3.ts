@@ -1,6 +1,7 @@
 import { AbortMultipartUploadCommand, CompleteMultipartUploadCommand, CreateMultipartUploadCommand, DeleteObjectCommand, GetObjectCommand, GetObjectCommandInput, ListPartsCommand, PutObjectCommand, S3, UploadPartCommand } from "@aws-sdk/client-s3";
 import { BUCKET_PATH } from "../_config/const";
 import { UploadFileType } from "../lib/database/interfaces/files.interfaces";
+import { MAX_CHUNK_COUNT } from "../lib/lib";
 
 
 
@@ -118,11 +119,13 @@ export class LOCAL_S3 {
     async uploadPart(params: Pick<UploadFileType, "file">, chunkIndex: number) {
         if (!this.uploadId) new Error("UploadId is required!")
 
+        const partNumber = Math.floor(chunkIndex / MAX_CHUNK_COUNT) + 1
+
         const input = {
             "Bucket": this.bucket,
             "Key": this.key,
             "Body": params?.file,
-            "PartNumber": chunkIndex + 1,
+            "PartNumber": partNumber,
             "UploadId": this.uploadId
         };
         const command = new UploadPartCommand(input);
@@ -133,6 +136,7 @@ export class LOCAL_S3 {
     async completeMultipartUpload() {
         if (!this.uploadId) new Error("UploadId is required!")
         const parts = await this.getListOfParts()
+
 
         const input = {
             "Bucket": this.bucket,
