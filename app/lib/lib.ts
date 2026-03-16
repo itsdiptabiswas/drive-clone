@@ -1,4 +1,5 @@
 import { compare } from "bcryptjs"
+import { extname } from "path"
 
 export const MAX_CHUNK_COUNT = 5
 
@@ -43,3 +44,23 @@ export const userInfoProjectionAggregationQuery = () => {
         }
     }
 }
+
+export const normalizeFileName = (originalName: string): { baseName: string, ext: string } => {
+    const ext = extname(originalName) || ""
+    const baseRaw = ext ? originalName.slice(0, -ext.length) : originalName
+
+    let base = baseRaw
+        .trim()
+        .replace(/\s+/g, " ")
+        .replace(/[\\/?%*:|"<>]/g, "-")
+
+    if (!base) {
+        base = "Untitled"
+    }
+
+    return {
+        baseName: base,
+        ext
+    }
+}
+

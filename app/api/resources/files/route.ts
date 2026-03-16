@@ -11,7 +11,6 @@ import { startSession } from "mongoose";
 import { getServerSession } from "next-auth";
 import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
-import { extname } from "path";
 import { UpdateNamePayloadSchema } from "../../_validation/data.validation";
 
 export const POST = async (req: NextRequest) => {
@@ -36,7 +35,6 @@ export const POST = async (req: NextRequest) => {
         }
 
         const name = formData.get("name") as string;
-        let fileName = name
 
         try {
             console.log("After all the data validation")
@@ -71,17 +69,17 @@ export const POST = async (req: NextRequest) => {
             })
 
             const buffer = Buffer.from(await file.arrayBuffer())
-            const hasFile = await service.findResourceByName(fileName, folderId, String(user?._id), { session: mongoSession })
 
-            if (hasFile) {
-                const ext = extname(fileName);
-                const name = fileName.split(ext)?.[0]
-                fileName = `${name} (1)${ext}`;
-            }
+            const uniqueFileName = await service.getNextFileName({
+                originalName: name,
+                parentFolderId: folderId || null,
+                userId: String(user._id),
+                session: { session: mongoSession }
+            })
 
             const { uploadId: awsUploadId, fileInfo } = await service.upload({
                 file: buffer,
-                fileName: fileName,
+                fileName: uniqueFileName,
                 createdBy: String(user._id),
                 parentFolderId: folderId,
                 size: totalSize,
