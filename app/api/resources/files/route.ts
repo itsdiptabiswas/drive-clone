@@ -70,16 +70,10 @@ export const POST = async (req: NextRequest) => {
 
             const buffer = Buffer.from(await file.arrayBuffer())
 
-            const uniqueFileName = await service.getNextFileName({
-                originalName: name,
-                parentFolderId: folderId || null,
-                userId: String(user._id),
-                session: { session: mongoSession }
-            })
 
             const { uploadId: awsUploadId, fileInfo } = await service.upload({
                 file: buffer,
-                fileName: uniqueFileName,
+                fileName: name,
                 createdBy: String(user._id),
                 parentFolderId: folderId,
                 size: totalSize,

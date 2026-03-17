@@ -249,12 +249,19 @@ const FileUploadModal = ({ isOpen }: Props) => {
         }
     }, [isOpen])
 
+    useEffect(() => {
+        return () => {
+            onClearState()
+        }
+    }, [isOpen])
+
 
     return (
         <ModalComponent
             id={FILE_UPLOAD}
             isOpen={isOpen}
-            size="lg" blockHide={!!files?.length}>
+            size="lg" blockHide={!!files?.length}
+        >
             <section className={style.wrapper}>
                 {!uploading && <label
                     htmlFor="upload-files"
