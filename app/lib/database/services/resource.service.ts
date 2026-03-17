@@ -12,17 +12,18 @@ import mimeType from "mime-types";
 import mongoose, { FilterQuery, MongooseUpdateQueryOptions, PipelineStage, SessionOption, Types } from "mongoose";
 import { tmpdir } from 'os';
 import path from "path";
-import { userInfoProjectionAggregationQuery } from "../../lib";
+import { normalizeFileName, userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
 import { FilesAndFolderModel } from "../models/filesAndFolders";
+import { FileNameCounterModel } from "../models/fileNameCounter.model";
 import { AccessService } from "./access.service";
 
 const Model = FilesAndFolderModel
 
 export class ResourceService {
 
-    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | string, name: string) {
+    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | Uint8Array<ArrayBufferLike> | string, name: string) {
         console.log("Called handleLocalFileUpload")
 
         if (!uploadId) {
@@ -156,12 +157,43 @@ export class ResourceService {
 
     }
 
-    async findResourceByName(name: string, parentFolderId: string, userId: string, options?: SessionOption) {
-        return await Model.findOne({
-            name: name,
-            parentFolderId: parentFolderId || null,
-            createdBy: new mongoose.Types.ObjectId(userId)
-        }, null, options)
+    async getNextFileName(params: {
+        originalName: string;
+        parentFolderId?: string | null;
+        userId: string;
+        session?: SessionOption;
+    }) {
+        const { originalName, parentFolderId, userId, session } = params
+        const { baseName, ext } = normalizeFileName(originalName)
+
+        const isRoot = !parentFolderId
+
+        const scope = isRoot ? {
+            parentFolderId: null,
+            userId: new Types.ObjectId(userId),
+            baseName
+        } : {
+            parentFolderId: new Types.ObjectId(parentFolderId),
+            userId: null,
+            baseName
+        }
+
+        const counterDoc = await FileNameCounterModel.findOneAndUpdate(
+            scope,
+            {
+                $inc: { nextVersion: 1 }
+            },
+            {
+                new: true,
+                upsert: true,
+                session: (session as any)?.session
+            }
+        )
+
+        const version = counterDoc.nextVersion
+        const finalBase = version === 1 ? baseName : `${baseName} (${version - 1})`
+
+        return `${finalBase}${ext}`
     }
 
     async createFolder(payload: CreateDataType, options?: SessionOption) {
