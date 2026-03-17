@@ -4,9 +4,10 @@ import { GenericAbortSignal } from "axios";
 export const breakIntoChunks = async (file: File, index: number, folderId = "", getProgress: (_progress: number, _fileIndex: number, _uploadId: string, _updatedFileName: string) => void, signal: GenericAbortSignal) => {
     return new Promise(async (resolve, reject) => {
         let uploadId = ""
-        const time = Date.now()
+        // const time = Date.now()
         try {
-            const updatedFileName = `${time}-${file.name}`
+            const updatedFileName = file.name
+            // `${time}-${file.name}`
             const chunks = await generateChunk(file)
             const formData = new FormData();
             formData.append("totalSize", String(file.size))

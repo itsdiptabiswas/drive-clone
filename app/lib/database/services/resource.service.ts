@@ -15,8 +15,8 @@ import path from "path";
 import { normalizeFileName, userInfoProjectionAggregationQuery } from "../../lib";
 import { AccessDocumentType, AccessSchemaType } from "../interfaces/access.interface";
 import { CreateDataType, DATA_TYPE, FilesAndFolderDocument, FilesAndFolderSchemaType, UploadFileType } from "../interfaces/files.interfaces";
-import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { FileNameCounterModel } from "../models/fileNameCounter.model";
+import { FilesAndFolderModel } from "../models/filesAndFolders";
 import { AccessService } from "./access.service";
 
 const Model = FilesAndFolderModel
@@ -643,9 +643,20 @@ export class ResourceService {
                 console.log("Completing Upload...")
                 await s3.completeMultipartUpload()
 
+                const service = new ResourceService();
+
+                const uniqueFileName = await service.getNextFileName({
+                    originalName: payload?.fileName,
+                    parentFolderId: payload?.parentFolderId || null,
+                    userId: String(payload?.userId),
+                    session: { session: options?.session }
+                })
+
+                console.log("uniqueFileName", uniqueFileName, payload?.fileName)
+
                 console.log("Saving file info to DB")
                 const [res] = await Model.create([{
-                    name: payload?.fileName,
+                    name: uniqueFileName,
                     createdBy: payload?.createdBy,
                     lastModified: new Date(),
                     dataType: DATA_TYPE.FILE,
