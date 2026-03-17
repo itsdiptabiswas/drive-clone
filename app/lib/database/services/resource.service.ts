@@ -32,7 +32,7 @@ export class ResourceService {
         }, null, options)
     }
 
-    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | Uint8Array<ArrayBufferLike> | string, name: string) {
+    private async handleLocalFileUpload(uploadId: string, buffer: Buffer | Uint8Array | string, name: string) {
         console.log("Called handleLocalFileUpload")
 
         if (!uploadId) {
