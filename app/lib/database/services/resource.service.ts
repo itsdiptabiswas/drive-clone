@@ -23,6 +23,15 @@ const Model = FilesAndFolderModel
 
 export class ResourceService {
 
+
+    async findResourceByName(name: string, parentFolderId: string, userId: string, options?: SessionOption) {
+        return await Model.findOne({
+            name: name,
+            parentFolderId: parentFolderId || null,
+            createdBy: new mongoose.Types.ObjectId(userId)
+        }, null, options)
+    }
+
     private async handleLocalFileUpload(uploadId: string, buffer: Buffer | Uint8Array<ArrayBufferLike> | string, name: string) {
         console.log("Called handleLocalFileUpload")
 
