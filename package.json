@@ -10,7 +10,6 @@
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.1014.0",
-		"@img/sharp-linux-x64": "^0.33.5",
 		"@reduxjs/toolkit": "^2.0.1",
 		"@tanstack/react-query": "^5.17.15",
 		"@tanstack/react-query-devtools": "^5.21.5",
