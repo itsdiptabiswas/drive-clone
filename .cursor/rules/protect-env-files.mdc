@@ -1,0 +1,11 @@
+---
+description: Never read, modify, or display .env files
+alwaysApply: true
+---
+
+# Protect Environment Files
+
+- NEVER read, open, or display `.env`, `.env.*`, or any environment variable files
+- NEVER modify or create `.env` files
+- If a user asks about env variables, help with the variable name or structure without accessing the actual file
+- When debugging env-related issues, ask the user to verify values themselves
