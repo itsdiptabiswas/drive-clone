@@ -3,6 +3,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import type { Metadata, Viewport } from "next";
 import { getServerSession } from "next-auth";
 import "nprogress/nprogress.css";
+import { Suspense } from "react";
 import { getUserInfo } from "./_actions/user";
 import TopBarLoader from "./components/loader/topbarLoader";
 import "./globals.scss";
@@ -31,24 +32,29 @@ export const metadata: Metadata = {
 	]
 };
 
-export default async function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+async function UserProfileWrapper({ children }: { children: React.ReactNode }) {
 	const session = await getServerSession(authOptions)
 	const userId = session ? String(session.user?._id) : ""
 	const user = await getUserInfo(userId)
 
+	return <ProfileProvider userInfo={user}>{children}</ProfileProvider>
+}
+
+export default function RootLayout({
+	children,
+}: {
+	children: React.ReactNode;
+}) {
 	return (
 		<html lang='en'>
 			<body suppressHydrationWarning={true}>
 				<TopBarLoader />
-				{/* <NextTopLoader color="#6a29ff" /> */}
 				<AppClientProvider>
-					<ProfileProvider userInfo={user}>
-						{children}
-					</ProfileProvider>
+					<Suspense>
+						<UserProfileWrapper>
+							{children}
+						</UserProfileWrapper>
+					</Suspense>
 				</AppClientProvider>
 			</body>
 		</html>

@@ -29,10 +29,12 @@ const Modal = (props: Props) => {
 	const instance = useRef<any>(null);
 	const dispatch = useAppDispatch()
 
-	const getInstance = useCallback(() => {
+	const getInstance = useCallback(async () => {
 		if (!instance.current) {
-			const bootstrap = BootstrapMethods.getBootstarp();
-			instance.current = new bootstrap.Modal(`#${id}`);
+			const Modal = await BootstrapMethods.getModal();
+			if (Modal) {
+				instance.current = new Modal(`#${id}`);
+			}
 		}
 	}, [id]);
 

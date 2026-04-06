@@ -4,23 +4,26 @@ import { MANAGE_ACCESS_MODAL_ID } from "../_config/const";
 import { EffectiveConnectionType } from "../interfaces/index.interface";
 
 export const BootstrapMethods = {
-    getBootstarp() {
+    async getModal() {
         if (typeof window === 'undefined') {
             console.warn('window is undefined');
             return null;
         }
 
-        return require('bootstrap')
+        const { default: Modal } = await import('bootstrap/js/dist/modal');
+        return Modal;
     },
-    toggle(id: string) {
-        const boostrap = this.getBootstarp();
-        const modal = new boostrap.Modal(`#${id}`);
+    async toggle(id: string) {
+        const Modal = await this.getModal();
+        if (!Modal) return;
+        const modal = new Modal(`#${id}`);
         modal.toggle()
     },
 
-    hide(id: string) {
-        const boostrap = this.getBootstarp();
-        const modal = new boostrap.Modal(`#${id}`);
+    async hide(id: string) {
+        const Modal = await this.getModal();
+        if (!Modal) return;
+        const modal = new Modal(`#${id}`);
         modal.hide()
     }
 }

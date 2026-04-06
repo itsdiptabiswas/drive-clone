@@ -2,8 +2,8 @@
 
 import store, { AppStore, useAppDispatch } from "@app/store";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ConfigProvider } from "antd";
+import dynamic from "next/dynamic";
 import { SessionProvider } from "next-auth/react";
 import { PropsWithChildren, useEffect, useRef } from "react";
 import { Provider } from "react-redux";
@@ -13,6 +13,11 @@ import Notifications from "./components/notification";
 import { EffectiveConnectionType } from "./interfaces/index.interface";
 import { addNetworkQuality } from "./store/actions/network.actions";
 import { getImageQuality } from "./utils/index.utils";
+
+const ReactQueryDevtools = dynamic(
+	() => import('@tanstack/react-query-devtools').then(m => ({ default: m.ReactQueryDevtools })),
+	{ ssr: false }
+);
 
 const queryClient = new QueryClient();
 
@@ -47,7 +52,7 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 					<AlertModal />
 					<NetworkSpeedMonitor />
 				</StoreProvider>
-				<ReactQueryDevtools initialIsOpen={false} />
+				{process.env.NODE_ENV === 'development' && <ReactQueryDevtools initialIsOpen={false} />}
 			</QueryClientProvider>
 			<BootstrapClient />
 		</SessionProvider>
@@ -56,7 +61,11 @@ const AppClientProvider = ({ children }: PropsWithChildren) => {
 
 function BootstrapClient() {
 	useEffect(() => {
-		require("bootstrap");
+		Promise.all([
+			import("bootstrap/js/dist/modal"),
+			import("bootstrap/js/dist/dropdown"),
+			import("bootstrap/js/dist/collapse"),
+		]);
 	}, []);
 
 	return null;
