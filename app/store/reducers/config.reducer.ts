@@ -13,7 +13,7 @@ export type ConfigStateType = typeof initialState;
 export default createReducer(initialState, (builder) => {
     builder
         .addCase(toggleSidebar, (state, action) => {
-            state.app.showSideBar = action?.payload?.showSidebar ?? !(state?.app?.showSideBar) ?? false;
+            state.app.showSideBar = action?.payload?.showSidebar ?? !(state?.app?.showSideBar)
             return state
         });
 });

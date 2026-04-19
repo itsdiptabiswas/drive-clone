@@ -31,7 +31,7 @@ export class LOCAL_S3 {
         this.key = key
 
         if (body)
-            this.body = Buffer.from(body)
+            this.body = body instanceof ArrayBuffer ? Buffer.from(new Uint8Array(body)) : Buffer.from(body)
 
         if (uploadId) {
             this.uploadId = uploadId

@@ -18,7 +18,7 @@ export const GET = async (req: NextRequest, { params }: { params: { resourceId: 
 
         const session = await getServerSession(authOptions)
         const url = new URL(req.nextUrl).searchParams
-        const searchWithDeleted = !!url.get("deleted") ?? false
+        const searchWithDeleted = !!url.get("deleted")
 
         if (!session) return response.status(401).send("Unauthorized")
         const user = session.user
