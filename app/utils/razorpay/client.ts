@@ -6,7 +6,7 @@ export class RazorpayClient {
     constructor(options: Record<string, any>) {
         this.instance = new window.Razorpay({
             ...options,
-            key: process.env.RAZORPAY_KEY_ID,
+            key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         })
     }
 }

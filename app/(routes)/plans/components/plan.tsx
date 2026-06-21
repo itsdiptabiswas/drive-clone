@@ -56,7 +56,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
             "currency": "INR",
             "name": `${user?.firstName} ${user?.lastName}`,
             "description": "",
-            "image": "",
+            "image": "https://mbox.diptabiswas.in/logo.png",
             "order_id": response?.razorpayOrderId,
             "callback_url": "",
             "prefill": {
@@ -68,7 +68,7 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
                 ...response
             },
             "theme": {
-                "color": "#3399cc"
+                "color": "#6a29ff"
             },
             "handler": function (_: any) {
                 // alert("Payment Success");
@@ -82,7 +82,6 @@ const PlanCard = ({ price, title, description, benefits, isActivated, isPopular,
         const razorpayClient = new RazorpayClient(options).instance;
         razorpayClient.open()
         razorpayClient.on('payment.failed', function (_: any) {
-            console.log("Payment Failed");
             // console.log(`response.error.code ${response.error.code}`);
             // console.log(`response.error.description ${response.error.description}`);
             // console.log(`response.error.source ${response.error.source}`);
