@@ -73,5 +73,12 @@ Theme Mobile: [https://dribbble.com/shots/13957659-Cloud-Drive-App](https://drib
 <img width="391" alt="image" src="https://github.com/user-attachments/assets/45c8a158-88ca-4476-85d5-55cb861d5a40">
 
 
+## Author
+ 
+**Dipta Biswas** — Senior Frontend Engineer specializing in React, TypeScript & real-time UIs
+ 
+[LinkedIn](https://www.linkedin.com/in/dipta-biswas) · [GitHub](https://github.com/itsdiptabiswas) · [MBOX Project](https://trello-clone-76971.web.app/)
+
+
 
 
