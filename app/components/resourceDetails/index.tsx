@@ -7,13 +7,15 @@ import { useAppDispatch, useAppSelector } from "@/app/store";
 import { toggleInfo } from "@/app/store/actions/info.actions";
 import { disabledClick } from '@/app/utils/index.utils';
 import Image from 'next/image';
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from 'react';
 import { getFileIconByType } from '../fileListItem/utils/index.utils';
 import ResourceInfoLoader from "../loader/resourceInfloLoader";
-import LottiePlayer from "../lottiePlayer";
-import ManageAccess from './components/manageAccess';
 import ResourceBody from './components/resourceBody';
 import style from './style.module.scss';
+
+const LottiePlayer = dynamic(() => import("../lottiePlayer"), { ssr: false });
+const ManageAccess = dynamic(() => import('./components/manageAccess'), { ssr: false });
 
 
 

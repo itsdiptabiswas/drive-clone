@@ -5,7 +5,9 @@ import { FILE_LIMIT, MANAGE_ACCESS_MODAL_ID, ROOT_FOLDER } from "@/app/_config/c
 import useInfiniteLoop from "@/app/_hooks/useInfiniteLoop";
 import ResourceLoader from "@/app/components/loader/resourceLoader";
 import ConfirmationModalComponent from "@/app/components/modal/modals/confirmation";
-import PreviewFiles from "@/app/components/preview";
+import dynamic from "next/dynamic";
+
+const PreviewFiles = dynamic(() => import("@/app/components/preview"), { ssr: false });
 import { DATA_TYPE } from "@/app/lib/database/interfaces/files.interfaces";
 import { useAppDispatch, useAppSelector, useAppStore } from "@/app/store";
 import { addBulkFiles, addBulkFolder, appendBulkFiles, removeAccessFromFileAsync, removeAccessFromFolderAsync, toggleModal } from "@/app/store/actions";

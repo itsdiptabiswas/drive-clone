@@ -9,13 +9,15 @@ import { Progress } from "antd";
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { flushSync } from "react-dom";
+import dynamic from "next/dynamic";
 import { getFileIconByType } from "../fileListItem/utils/index.utils";
 import ImagePreview from "./components/imagePreview";
 import OtherPreview from "./components/otherPreview";
 import TextPreview from "./components/txtPreview";
-import VideoPreview from "./components/videoPreview";
 import useDownload from "./hooks/useDownload";
 import style from "./style.module.scss";
+
+const VideoPreview = dynamic(() => import("./components/videoPreview"), { ssr: false });
 
 
 
